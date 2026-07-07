@@ -8,7 +8,7 @@ with open("sample.py", "r") as file:
 # Convert to AST
 tree = ast.parse(code)
 
-# Connect to Database
+
 conn = sqlite3.connect("trace.db")
 cursor = conn.cursor()
 
