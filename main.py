@@ -12,7 +12,7 @@ tree = ast.parse(code)
 conn = sqlite3.connect("trace.db")
 cursor = conn.cursor()
 
-# Create Table
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS variables (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
