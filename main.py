@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS variables (
 )
 """)
 
-# Store data
+
 for node in ast.walk(tree):
     if isinstance(node, ast.Assign):
         for target in node.targets:
