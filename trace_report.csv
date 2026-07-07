@@ -1,0 +1,21 @@
+Line Number,Variable,Value
+5,animal,<class 'animal'>
+7,sound,bow bow
+8,sound,bow bow
+8,name,zimba
+9,sound,bow bow
+9,name,zimba
+10,sound,bow bow
+10,name,zimba
+12,animal,<class 'animal'>
+12,dog,<class 'dog'>
+13,animal,<class 'animal'>
+13,dog,<class 'dog'>
+13,c,<dog object at 0x00000276653878C0>
+11,Self,<dog object at 0x00000276653878C0>
+14,animal,<class 'animal'>
+14,dog,<class 'dog'>
+14,c,<dog object at 0x00000276653878C0>
+3,Self,<dog object at 0x00000276653878C0>
+4,Self,<dog object at 0x00000276653878C0>
+4,name,animal

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Variable Tracer</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            background:#f4f7fb;
+        }
+
+        h2{
+            font-weight:bold;
+        }
+
+        .card{
+            border-radius:15px;
+            box-shadow:0px 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .selected{
+            background-color:yellow !important;
+            font-weight:bold;
+        }
+
+        pre{
+            background:#f8f9fa;
+            padding:15px;
+            border-radius:10px;
+            white-space:pre-wrap;
+            font-family:Consolas, monospace;
+        }
+
+        #codeBlock div{
+            padding:2px 8px;
+        }
+
+        #codeBlock div.active{
+            background:yellow;
+            font-weight:bold;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+<h2 class="text-center text-primary mb-4">
+🔄 Python Variable Tracer
+</h2>
+
+<form action="/upload" method="POST" enctype="multipart/form-data">
+
+<div class="input-group mb-3">
+
+<input
+type="file"
+name="file"
+class="form-control"
+required>
+
+<button
+type="submit"
+class="btn btn-success">
+Upload & Trace
+</button>
+
+</div>
+
+</form>
+
+<form method="GET">
+
+<input
+type="text"
+name="search"
+class="form-control mb-4"
+placeholder="Search Variable..."
+value="{{ search }}">
+
+</form>
+<div class="mb-3">
+    <a href="/download" class="btn btn-warning">
+        📥 Download CSV Report
+    </a>
+    <a href="/clear" class="btn btn-danger">
+    🗑 Clear Trace
+</a>
+</div>
+
+<div class="row mb-4">
+
+<div class="col-md-4">
+
+<div class="card p-3 text-center">
+
+<h5>Total Variables</h5>
+
+<h2 class="text-primary">
+{{ total_variables }}
+</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card p-3 text-center">
+
+<h5>Total Records</h5>
+
+<h2 class="text-success">
+{{ total_records }}
+</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card p-3 text-center">
+
+<h5>Last Line</h5>
+
+<h2 class="text-danger">
+{{ last_line }}
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="text-center mb-3">
+
+<button type="button" class="btn btn-success me-2" onclick="playTrace()">
+    ▶ Play
+</button>
+
+<button type="button" class="btn btn-danger" onclick="stopTrace()">
+    ⏹ Stop
+</button>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+Execution Timeline
+</label>
+
+<input
+type="range"
+class="form-range"
+id="timeline"
+min="0"
+max="{{ total_records-1 if total_records>0 else 0 }}"
+value="0"
+oninput="moveTimeline(this.value)">
+
+</div>
+
+<table class="table table-bordered table-hover table-striped">
+
+<thead class="table-dark">
+
+<tr>
+<th>Line Number</th>
+<th>Variable</th>
+<th>Value</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for row in data %}
+
+<tr onclick="highlightRow(this)">
+
+<td>{{ row[0] }}</td>
+<td>{{ row[1] }}</td>
+<td>{{ row[2] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+<!-- Uploaded Python Code -->
+
+<div class="card mt-4">
+
+    <div class="card-header bg-dark text-white">
+        Uploaded Python Code
+    </div>
+
+    <div class="card-body">
+
+        {% if code %}
+
+        <pre id="codeBlock">
+{% for line in code.split('\n') %}
+<div id="line{{ loop.index }}">
+{{ loop.index }}. {{ line }}
+</div>
+{% endfor %}
+        </pre>
+
+        {% else %}
+
+        <p class="text-danger">
+            No Python file uploaded yet.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</div>
+<hr class="mt-5">
+
+<div class="text-center text-muted mb-3">
+    <h6>Python Variable Tracer</h6>
+    <p>Developed using Python, Flask, SQLite, HTML, CSS & Bootstrap</p>
+</div>
+
+<script>
+
+let currentIndex = -1;
+
+function highlightRow(row){
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(r => r.classList.remove("selected"));
+
+    row.classList.add("selected");
+
+    currentIndex = Array.from(rows).indexOf(row);
+
+    let lineNo = row.cells[0].innerText;
+
+    highlightCodeLine(lineNo);
+
+}
+
+function highlightCodeLine(lineNo){
+
+    document.querySelectorAll("#codeBlock div").forEach(function(line){
+        line.classList.remove("active");
+    });
+
+    let line = document.getElementById("line" + lineNo);
+
+    if(line){
+        line.classList.add("active");
+        line.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+    }
+
+}
+
+function nextRow(){
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    if(rows.length==0) return;
+
+    if(currentIndex < rows.length-1){
+        currentIndex++;
+    }
+
+    rows.forEach(r=>r.classList.remove("selected"));
+
+    rows[currentIndex].classList.add("selected");
+
+    let lineNo = rows[currentIndex].cells[0].innerText;
+
+    highlightCodeLine(lineNo);
+
+}
+
+function previousRow(){
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    if(rows.length==0) return;
+
+    if(currentIndex>0){
+        currentIndex--;
+    }
+
+    rows.forEach(r=>r.classList.remove("selected"));
+
+    rows[currentIndex].classList.add("selected");
+
+    let lineNo = rows[currentIndex].cells[0].innerText;
+
+    highlightCodeLine(lineNo);
+
+}
+
+function moveTimeline(index){
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(r=>r.classList.remove("selected"));
+
+    if(rows.length>0){
+
+        rows[index].classList.add("selected");
+
+        let lineNo = rows[index].cells[0].innerText;
+
+        highlightCodeLine(lineNo);
+
+        currentIndex = Number(index);
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

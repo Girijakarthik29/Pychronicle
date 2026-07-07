@@ -1,0 +1,21 @@
+body{
+    background:#f4f7fc;
+}
+
+h2{
+    font-weight:bold;
+}
+
+table{
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+input{
+    border-radius:8px;
+}
+
+.table-hover tbody tr:hover{
+    background:#d6e9ff;
+}
