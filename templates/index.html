@@ -78,7 +78,7 @@ Upload & Trace
 type="text"
 name="search"
 class="form-control mb-4"
-placeholder="Search Variable..."
+placeh~older="Search Variable..."
 value="{{ search }}">
 
 </form>
@@ -226,6 +226,32 @@ oninput="moveTimeline(this.value)">
     </div>
 
 </div>
+<div class="card mt-4">
+
+    <div class="card-header bg-primary text-white">
+        🤖 AI Code Explanation
+    </div>
+    
+
+<div class="card mt-4">
+
+    <div class="card-header bg-success text-white">
+        📊 Variable Execution Graph
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="variableChart"></canvas>
+
+    </div>
+
+</div>
+
+    <div class="card-body">
+        <pre>{{ explanation }}</pre>
+    </div>
+
+</div>
 
 </div>
 <hr class="mt-5">
@@ -332,6 +358,33 @@ function moveTimeline(index){
     }
 
 }
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+const ctx = document.getElementById("variableChart");
+
+new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: {{ graph_labels | tojson }},
+        datasets: [{
+            label: "Variable Execution",
+            data: {{ graph_values | tojson }},
+            borderWidth: 2,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
 
 </script>
 

@@ -1,19 +1,23 @@
 import sys
 import sqlite3
 
-conn = sqlite3.connect("trace.db")
+conn = sqlite3.connect("trace.db",timeout=30)
+conn.execute("PRAGMA journal_mode=WAL;")
 cursor = conn.cursor()
 
-cursor.execute("DROP TABLE IF EXISTS variables")
+#cursor.execute("DROP TABLE IF EXISTS variables")
 
 cursor.execute("""
-CREATE TABLE variables(
+CREATE TABLE IF NOT EXISTS variables(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     line_number INTEGER,
     variable_name TEXT,
     value TEXT
 )
 """)
+cursor.execute("DELETE FROM variables")
+conn.commit()
+
 
 conn.commit()
 
