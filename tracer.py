@@ -5,7 +5,7 @@ conn = sqlite3.connect("trace.db",timeout=30)
 conn.execute("PRAGMA journal_mode=WAL;")
 cursor = conn.cursor()
 
-#cursor.execute("DROP TABLE IF EXISTS variables")
+
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS variables(
@@ -33,7 +33,7 @@ def tracer(frame, event, arg):
     if event != "line":
         return tracer
 
-    # Trace only uploaded file
+    
     if frame.f_code.co_filename != target_file:
         return tracer
 

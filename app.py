@@ -4,7 +4,7 @@ import os
 import subprocess
 import csv
 from datetime import datetime
-#hiiii
+
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "uploads"
@@ -21,7 +21,7 @@ def index():
     filename = ""
     explanation = "Upload a Python file to view AI explanation."
 
-    # Read latest uploaded file
+    
     py_files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith(".py")]
 
     if py_files:

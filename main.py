@@ -1,11 +1,11 @@
 import ast
 import sqlite3
 
-# Read sample.py
+
 with open("sample.py", "r") as file:
     code = file.read()
 
-# Convert to AST
+
 tree = ast.parse(code)
 
 
