@@ -361,17 +361,19 @@ function moveTimeline(index){
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
 
+<canvas id="variableChart"></canvas>
+
+<script>
 const ctx = document.getElementById("variableChart");
 
 new Chart(ctx, {
     type: "line",
     data: {
-        labels: {{ graph_labels | tojson }},
+        labels: ["A", "B", "C", "D"],
         datasets: [{
             label: "Variable Execution",
-            data: {{ graph_values | tojson }},
+            data: [10, 20, 15, 30],
             borderWidth: 2,
             fill: false
         }]
@@ -385,7 +387,6 @@ new Chart(ctx, {
         }
     }
 });
-
 </script>
 
 </body>
