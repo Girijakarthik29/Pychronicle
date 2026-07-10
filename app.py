@@ -58,8 +58,15 @@ def index():
     total_variables = len(set(row[1] for row in data)) if data else 0
     last_line = max((row[0] for row in data), default=0)
 
-    graph_labels = [str(row[0]) for row in data]
-    graph_values = list(range(1, len(data) + 1))
+    graph_labels = []
+    graph_values = []
+    for row in data:
+        graph_labels.append(row[1])   
+
+    try:
+        graph_values.append(float(row[2]))   
+    except:
+        graph_values.append(0)               
 
     if code:
         lines = code.split("\n")
