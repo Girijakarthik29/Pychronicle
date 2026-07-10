@@ -2,16 +2,16 @@ import tkinter as tk
 from tkinter import ttk
 import sqlite3
 
-# Connect Database
+
 conn = sqlite3.connect("trace.db")
 cursor = conn.cursor()
 
-# Create Window
+
 root = tk.Tk()
 root.title("Python Variable Tracer")
 root.geometry("600x400")
 
-# Create Table
+
 tree = ttk.Treeview(root)
 tree["columns"] = ("Line", "Variable", "Value")
 
