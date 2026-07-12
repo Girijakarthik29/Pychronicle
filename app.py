@@ -49,7 +49,7 @@ def index():
             SELECT line_number, variable_name, value
             FROM variables
         """)
-#hghghhjkjj
+#add ai summary
     data = cursor.fetchall()
 
     conn.close()
@@ -95,7 +95,7 @@ def index():
         graph_values=graph_values
     )
 
-
+# upload python file 
 @app.route("/upload", methods=["POST"])
 def upload():
 
