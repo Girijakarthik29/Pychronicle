@@ -49,7 +49,7 @@ def index():
             SELECT line_number, variable_name, value
             FROM variables
         """)
-#add ai summary
+#add ai summary 
     data = cursor.fetchall()
 
     conn.close()
