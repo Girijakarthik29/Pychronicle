@@ -49,11 +49,7 @@ def index():
             SELECT line_number, variable_name, value
             FROM variables
         """)
-<<<<<<< HEAD
-#add ai summary 
-=======
-
->>>>>>> f99550a (fixed upload  issues)
+#hghghhjkjj
     data = cursor.fetchall()
 
     conn.close()
@@ -85,7 +81,7 @@ def index():
 
 ✅ Variable tracing completed successfully.
 """
-#hgjhjkbnnmkmjhbss
+
     return render_template(
         "index.html",
         data=data,
@@ -99,7 +95,7 @@ def index():
         graph_values=graph_values
     )
 
-# upload python file 
+
 @app.route("/upload", methods=["POST"])
 def upload():
 
