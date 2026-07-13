@@ -49,7 +49,11 @@ def index():
             SELECT line_number, variable_name, value
             FROM variables
         """)
+<<<<<<< HEAD
 #add ai summary 
+=======
+
+>>>>>>> f99550a (fixed upload  issues)
     data = cursor.fetchall()
 
     conn.close()
@@ -81,7 +85,7 @@ def index():
 
 ✅ Variable tracing completed successfully.
 """
-
+#hgjhjkbnnmkmjhbss
     return render_template(
         "index.html",
         data=data,
