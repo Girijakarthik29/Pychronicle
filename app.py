@@ -12,6 +12,8 @@ UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 @app.route("/")
+#AI Code Summary
+
 def index():
 
     search = request.args.get("search", "")
