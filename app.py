@@ -4,8 +4,6 @@ import os
 import subprocess
 import csv
 from datetime import datetime
-#dgfdkjhgfdsxcvbnkjhgtyh
-kjuhynjkmjh
  
 
 app = Flask(__name__)
