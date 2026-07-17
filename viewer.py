@@ -11,6 +11,7 @@ root = tk.Tk()
 root.title("Python Variable Tracer")
 root.geometry("600x400")
 
+#tree view 
 
 tree = ttk.Treeview(root)
 tree["columns"] = ("Line", "Variable", "Value")
