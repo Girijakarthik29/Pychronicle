@@ -25,7 +25,7 @@ ignore = {
 }
 
 target_file = ""
-
+#to define tracer frames ,events
 def tracer(frame, event, arg):
 
     if event != "line":
