@@ -17,8 +17,6 @@ CREATE TABLE IF NOT EXISTS variables(
 """)
 cursor.execute("DELETE FROM variables")
 conn.commit()
-
-
 conn.commit()
 
 ignore = {
