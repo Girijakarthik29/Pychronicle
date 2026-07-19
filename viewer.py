@@ -11,6 +11,7 @@ root = tk.Tk()
 root.title("Python Variable Tracer")
 root.geometry("600x400")
 
+#tree view 
 
 tree = ttk.Treeview(root)
 tree["columns"] = ("Line", "Variable", "Value")
@@ -25,7 +26,7 @@ tree.heading("Line", text="Line Number")
 tree.heading("Variable", text="Variable Name")
 tree.heading("Value", text="Value")
 
-# Read Data
+
 cursor.execute("SELECT line_number, variable_name, value FROM variables")
 
 for row in cursor.fetchall():
