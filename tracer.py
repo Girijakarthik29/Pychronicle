@@ -18,14 +18,12 @@ CREATE TABLE IF NOT EXISTS variables(
 cursor.execute("DELETE FROM variables")
 conn.commit()
 conn.commit()
-
 ignore = {
     "__name__", "__doc__", "__package__", "__loader__", "__spec__",
     "__annotations__", "__builtins__", "__file__", "__cached__"
 }
 
 target_file = ""
-
 def tracer(frame, event, arg):
 
     if event != "line":
