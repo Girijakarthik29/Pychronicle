@@ -56,7 +56,7 @@ def index():
     total_records = len(data)
     total_variables = len(set(row[1] for row in data)) if data else 0
     last_line = max((row[0] for row in data), default=0)
-
+#to add graph labels and values 
     graph_labels = []
     graph_values = []
     for row in data:
