@@ -24,10 +24,6 @@ ignore = {
 }
 
 target_file = ""
-<<<<<<< HEAD
-=======
-#to define tracer frames ,events
->>>>>>> c4b1b1a0b871a35a5889381d8fb2644cc8a1f619
 def tracer(frame, event, arg):
 
     if event != "line":
@@ -64,7 +60,6 @@ exec(compile(source, target_file, "exec"), {})
 
 sys.settrace(None)
 
-conn.commit()
-conn.close()
+
 
 print("Tracing Completed Successfully!")
