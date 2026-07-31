@@ -59,7 +59,8 @@ with open(target_file, "r") as f:
 exec(compile(source, target_file, "exec"), {})
 
 sys.settrace(None)
-
+conn.commit()
+conn.close()
 
 
 print("Tracing Completed Successfully!")
