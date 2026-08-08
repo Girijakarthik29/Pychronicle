@@ -6,9 +6,9 @@ import csv
 from datetime import datetime
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
-
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 @app.route("/")
-
 
 def index():
 
