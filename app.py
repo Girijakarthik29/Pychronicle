@@ -118,7 +118,7 @@ def upload():
     filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
 
     file.save(filepath)
-       # Error Detection
+       
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             source_code = f.read()

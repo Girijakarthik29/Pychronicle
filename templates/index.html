@@ -447,7 +447,7 @@ let playTimer = null;
 let isPlaying = false;
 
 
-// Get all execution history rows
+
 document.addEventListener("DOMContentLoaded", function(){
 
     executionRows = Array.from(
@@ -457,20 +457,20 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 
-// Highlight selected Python line
+
 function selectExecutionLine(lineNumber){
 
-    // Remove previous code highlight
+    
     document.querySelectorAll(".code-line").forEach(function(line){
         line.classList.remove("active");
     });
 
-    // Remove previous table selection
+    
     document.querySelectorAll(".execution-row").forEach(function(row){
         row.classList.remove("selected-row");
     });
 
-    // Highlight Python code
+
     const codeLine = document.getElementById("line-" + lineNumber);
 
     if(codeLine){
@@ -483,7 +483,7 @@ function selectExecutionLine(lineNumber){
         });
     }
 
-    // Highlight corresponding history row
+    
     executionRows.forEach(function(row){
 
         if(parseInt(row.dataset.line) === parseInt(lineNumber)){
@@ -499,7 +499,7 @@ function selectExecutionLine(lineNumber){
 }
 
 
-// PLAY button
+
 function playTrace(){
 
     if(executionRows.length === 0){
@@ -507,7 +507,7 @@ function playTrace(){
         return;
     }
 
-    // Start from first step
+    
     currentStep = 0;
     isPlaying = true;
 
@@ -535,7 +535,7 @@ function playTrace(){
 }
 
 
-// STOP button
+
 function stopTrace(){
 
     clearInterval(playTimer);
