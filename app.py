@@ -3,7 +3,10 @@ import sqlite3
 import os
 import subprocess
 import csv
+import ast
 from datetime import datetime
+
+
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -53,17 +56,22 @@ def index():
     total_records = len(data)
     total_variables = len(set(row[1] for row in data)) if data else 0
     last_line = max((row[0] for row in data), default=0)
-
     graph_labels = []
     graph_values = []
+
     for row in data:
-        graph_labels.append(row[1])   
+        line_number = row[0]
+        variable_name = row[1]
+        value = row[2]
 
-    try:
-        graph_values.append(float(row[2]))   
-    except:
-        graph_values.append(0)               
+        graph_labels.append(f"Line {line_number} - {variable_name}"
+        )
 
+        try:
+            graph_values.append(float(value))
+        except (ValueError, TypeError):
+             graph_values.append(0)
+    
     if code:
         lines = code.split("\n")
 
@@ -92,6 +100,8 @@ def index():
     )
 
 
+
+
 @app.route("/upload", methods=["POST"])
 def upload():
 
@@ -108,6 +118,33 @@ def upload():
     filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
 
     file.save(filepath)
+       # Error Detection
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            source_code = f.read()
+
+        ast.parse(source_code)
+
+    except SyntaxError as e:
+        return render_template(
+            "index.html",
+            data=[],
+            search="",
+            total_records=0,
+            total_variables=0,
+            last_line=0,
+            code=source_code,
+            explanation=f"""
+❌ Error Detected
+
+File Name : {file.filename}
+Error Type : SyntaxError
+Line Number : {e.lineno}
+Message : {e.msg}
+"""
+        )
+
+
     import gc
     gc.collect()
 

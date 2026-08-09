@@ -40,6 +40,20 @@
             background:yellow;
             font-weight:bold;
         }
+        .execution-row.selected-row{
+    background-color:#fff3cd !important;
+    font-weight:bold;
+}
+
+.code-line{
+    padding:4px 8px;
+    border-radius:5px;
+}
+
+.code-line.active{
+    background-color:yellow;
+    font-weight:bold;
+}
     </style>
 
 </head>
@@ -139,91 +153,110 @@ value="{{ search }}">
 
 <div class="text-center mb-3">
 
-<button type="button" class="btn btn-success me-2" onclick="playTrace()">
-    ▶ Play
+<button class="btn btn-success" onclick="playTrace()">
+    ▶️ Play
 </button>
 
-<button type="button" class="btn btn-danger" onclick="stopTrace()">
+<button class="btn btn-danger" onclick="stopTrace()">
     ⏹ Stop
 </button>
 
 </div>
 
-<div class="mb-4">
 
-<label class="form-label">
-Execution Timeline
-</label>
-
-<input
-type="range"
-class="form-range"
-id="timeline"
-min="0"
-max="{{ total_records-1 if total_records>0 else 0 }}"
-value="0"
-oninput="moveTimeline(this.value)">
-
-</div>
-
-<table class="table table-bordered table-hover table-striped">
-
-<thead class="table-dark">
-
-<tr>
-<th>Line Number</th>
-<th>Variable</th>
-<th>Value</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for row in data %}
-
-<tr onclick="highlightRow(this)">
-
-<td>{{ row[0] }}</td>
-<td>{{ row[1] }}</td>
-<td>{{ row[2] }}</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
 
 
 <div class="card mt-4">
 
-    <div class="card-header bg-dark text-white">
-        Uploaded Python Code
+    <div class="row g-4">
+
+    <!-- LEFT SIDE - EXECUTION TABLE -->
+    <div class="col-md-6">
+
+        <div class="card h-100">
+
+            <div class="card-header bg-dark text-white">
+                📋 Execution History
+            </div>
+
+            <div class="card-body p-0">
+
+                <div class="table-responsive"
+                     style="max-height:500px; overflow-y:auto;">
+
+                    <table class="table table-bordered table-striped mb-0">
+
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Line Number</th>
+                                <th>Variable</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                                {% for row in data %}
+                                <tr class="execution-row"
+                                    data-line="{{ row[0] }}"
+                                    onclick="selectExecutionLine({{ row[0] }})"
+                                    style="cursor:pointer;">
+
+                                    <td>{{ row[0] }}</td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+
+                                </tr>
+                                {% endfor %}
+                           
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
-    <div class="card-body">
 
-        {% if code %}
+    <!-- RIGHT SIDE - PYTHON CODE -->
+    <div class="col-md-6">
 
-        <pre id="codeBlock">
+        <div class="card h-100">
+
+            <div class="card-header bg-secondary text-white">
+                💻 Uploaded Python Code
+            </div>
+
+            <div class="card-body">
+
+                {% if code %}
+<pre id="codeBlock"
+     style="max-height:500px; overflow-y:auto;">
+
 {% for line in code.split('\n') %}
-<div id="line{{ loop.index }}">
-{{ loop.index }}. {{ line }}
+<div id="line-{{ loop.index }}" class="code-line">
+    <span class="text-muted">{{ loop.index }}.</span> {{ line }}
 </div>
 {% endfor %}
-        </pre>
 
-        {% else %}
+</pre>
+                {% else %}
 
-        <p class="text-danger">
-            No Python file uploaded yet.
-        </p>
+                <p class="text-danger">
+                    No Python file uploaded yet.
+                </p>
 
-        {% endif %}
+                {% endif %}
+
+            </div>
+        </div>
 
     </div>
+
+</div>
 
 </div>
 <div class="card mt-4">
@@ -246,6 +279,7 @@ oninput="moveTimeline(this.value)">
         <canvas id="variableChart"></canvas>
 
     </div>
+    
 
 </div>
 
@@ -362,31 +396,162 @@ function moveTimeline(index){
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<canvas id="variableChart"></canvas>
-
 <script>
+const graphLabels = {{ graph_labels | tojson }};
+const graphValues = {{ graph_values | tojson }};
+
 const ctx = document.getElementById("variableChart");
 
 new Chart(ctx, {
     type: "line",
+
     data: {
-        labels: ["A", "B", "C", "D"],
+        labels: graphLabels,
+
         datasets: [{
             label: "Variable Execution",
-            data: [10, 20, 15, 30],
+            data: graphValues,
             borderWidth: 2,
-            fill: false
+            fill: false,
+            tension: 0.3
         }]
     },
+
     options: {
         responsive: true,
+
         scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: "Execution"
+                }
+            },
+
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: "Variable Value"
+                }
             }
         }
     }
 });
+</script>
+<script>
+
+let executionRows = [];
+let currentStep = 0;
+let playTimer = null;
+let isPlaying = false;
+
+
+// Get all execution history rows
+document.addEventListener("DOMContentLoaded", function(){
+
+    executionRows = Array.from(
+        document.querySelectorAll(".execution-row")
+    );
+
+});
+
+
+// Highlight selected Python line
+function selectExecutionLine(lineNumber){
+
+    // Remove previous code highlight
+    document.querySelectorAll(".code-line").forEach(function(line){
+        line.classList.remove("active");
+    });
+
+    // Remove previous table selection
+    document.querySelectorAll(".execution-row").forEach(function(row){
+        row.classList.remove("selected-row");
+    });
+
+    // Highlight Python code
+    const codeLine = document.getElementById("line-" + lineNumber);
+
+    if(codeLine){
+
+        codeLine.classList.add("active");
+
+        codeLine.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+
+    // Highlight corresponding history row
+    executionRows.forEach(function(row){
+
+        if(parseInt(row.dataset.line) === parseInt(lineNumber)){
+            row.classList.add("selected-row");
+
+            row.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        }
+
+    });
+}
+
+
+// PLAY button
+function playTrace(){
+
+    if(executionRows.length === 0){
+        alert("No execution history available.");
+        return;
+    }
+
+    // Start from first step
+    currentStep = 0;
+    isPlaying = true;
+
+    clearInterval(playTimer);
+
+    playTimer = setInterval(function(){
+
+        if(currentStep >= executionRows.length){
+
+            clearInterval(playTimer);
+            isPlaying = false;
+            return;
+        }
+
+        const row = executionRows[currentStep];
+
+        const lineNumber = row.dataset.line;
+
+        selectExecutionLine(lineNumber);
+
+        currentStep++;
+
+    }, 1000);
+
+}
+
+
+// STOP button
+function stopTrace(){
+
+    clearInterval(playTimer);
+
+    isPlaying = false;
+
+    document.querySelectorAll(".code-line").forEach(function(line){
+        line.classList.remove("active");
+    });
+
+    document.querySelectorAll(".execution-row").forEach(function(row){
+        row.classList.remove("selected-row");
+    });
+
+}
+
 </script>
 
 </body>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Marksheet</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:450px;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    text-align:center;
+}
+
+h1{
+    color:#333;
+    margin-bottom:20px;
+}
+
+button{
+    background:#007bff;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#0056b3;
+    transform:scale(1.05);
+}
+
+.result{
+    margin-top:20px;
+    text-align:left;
+    line-height:2;
+    font-size:18px;
+}
+
+.result p{
+    border-bottom:1px solid #ddd;
+    padding:5px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎓 Student Marksheet</h1>
+
+    <button onclick="showResult()">Enter Details</button>
+
+    <div class="result" id="output"></div>
+</div>
+
+<script>
+function showResult(){
+
+    let name = prompt("Enter your name");
+    let age = Number(prompt("Enter your age"));
+
+    let tamil = Number(prompt("Enter Tamil mark"));
+    let english = Number(prompt("Enter English mark"));
+    let maths = Number(prompt("Enter Maths mark"));
+    let science = Number(prompt("Enter Science mark"));
+    let social = Number(prompt("Enter Social mark"));
+
+    let total = tamil + english + maths + science + social;
+    let average = total / 5;
+
+    let grade;
+
+    if(average >= 90){
+        grade = "A+";
+    }
+    else if(average >= 75){
+        grade = "A";
+    }
+    else if(average >= 60){
+        grade = "B";
+    }
+    else if(average >= 40){
+        grade = "C";
+    }
+    else{
+        grade = "Fail";
+    }
+
+    document.getElementById("output").innerHTML = `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Age:</strong> ${age}</p>
+        <p><strong>Tamil:</strong> ${tamil}</p>
+        <p><strong>English:</strong> ${english}</p>
+        <p><strong>Maths:</strong> ${maths}</p>
+        <p><strong>Science:</strong> ${science}</p>
+        <p><strong>Social:</strong> ${social}</p>
+        <p><strong>Total:</strong> ${total}</p>
+        <p><strong>Average:</strong> ${average.toFixed(2)}</p>
+        <p><strong>Grade:</strong> ${grade}</p>
+    `;
+}
+</script>
+
+</body>
+</html>
